@@ -8,13 +8,14 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.DbPopulator;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static ru.javawebinar.topjava.MealTestData.*;
 
 /**
  * Created by d.baskakov on 25.07.2017.
@@ -44,36 +45,37 @@ public class MealServiceTest {
     @Test
     public void get() throws Exception {
         Meal meal=service.get(100003,100000);
-        Assert.assertEquals(meal, MealTestData.MEAL1);
+        MATCHER.assertEquals(meal, MEAL2);
     }
 
     @Test
     public void delete() throws Exception {
-        //todo
+        service.delete(100003,100000);
+        MATCHER.assertCollectionEquals(service.getAll(100000), Arrays.asList(MEAL1));
     }
 
     @Test
     public void getBetweenDateTimes() throws Exception {
-        //todo
+        List<Meal> meals=service.getBetweenDateTimes(LocalDateTime.parse("2017-05-16T11:00:00"),LocalDateTime.MAX,100000);
+        MATCHER.assertCollectionEquals(Arrays.asList(MEAL2),meals);
     }
 
     @Test
     public void getAll() throws Exception {
         List<Meal> mealList=service.getAll(100000);
-        mealList.forEach(m-> System.out.println(m));
+       MATCHER.assertCollectionEquals(mealList,meals);
     }
 
     @Test
     public void update() throws Exception {
-        //todo
-        Meal meal=service.update(MealTestData.MEAL2,100000);
-        Assert.assertEquals(meal,service.get(meal.getId(),100000));
+        Meal meal=service.update(MEAL3,100000);
+        MATCHER.assertEquals(meal,MEAL3);
     }
 
     @Test
     public void save() throws Exception {
-        Meal meal=service.save(MealTestData.MEAL9,100000);
-        Assert.assertEquals(meal,service.get(meal.getId(),100000));
+        service.save(MEAL5,100000);
+        MATCHER.assertCollectionEquals(service.getAll(100000), Arrays.asList(MEAL5,MEAL2,MEAL1));
 
     }
 
