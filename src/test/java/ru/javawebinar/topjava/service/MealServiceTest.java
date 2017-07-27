@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.DbPopulator;
@@ -25,6 +26,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringRunner.class)
+@Sql("classpath:db/populateDB.sql")
 public class MealServiceTest {
 
     static {
@@ -34,12 +36,10 @@ public class MealServiceTest {
     @Autowired
     private MealService service;
 
-    @Autowired
-    private DbPopulator dbPopulator;
 
     @Before
     public void setUp() throws Exception {
-        dbPopulator.execute();
+
     }
 
     @Test

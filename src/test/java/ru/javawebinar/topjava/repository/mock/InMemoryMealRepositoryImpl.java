@@ -45,15 +45,22 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public Meal save(Meal meal, int userId) {
         Objects.requireNonNull(meal);
+//   нету транзакционности при delete\update может вернуть запись хотя она должна быть удалена
+//        if (meal.isNew()) {
+//            meal.setId(counter.incrementAndGet());
+//        } else if (get(meal.getId(), userId) == null) {
+//            return null;
+//        }
+//        Map<Integer, Meal> meals = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
+//        meals.put(meal.getId(), meal);
+//        return meal;
 
+        Map<Integer, Meal> meals = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-        } else if (get(meal.getId(), userId) == null) {
-            return null;
+            return meals.put(meal.getId(), meal);
         }
-        Map<Integer, Meal> meals = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
-        meals.put(meal.getId(), meal);
-        return meal;
+        return meals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @PostConstruct

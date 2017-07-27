@@ -20,7 +20,7 @@ import static ru.javawebinar.topjava.UserTestData.USER;
 
 //он не работает потому что мы в конфиге спринга поставили сканить пакет JDBC иначе у нас вылетала ошипка что есть несколько бинов, это будем обходить чуть позже
 // пока тупо добавил тестовый конфиг спринга
-@ContextConfiguration({"classpath:spring/spring-test.xml"})
+@ContextConfiguration({"classpath:spring/spring-app.xml","classpath:spring/spring-test.xml"})
 @RunWith(SpringRunner.class)
 public class InMemoryAdminRestControllerSpringTest {
 
